@@ -113,6 +113,9 @@ class Database:
     async def select_chanel(self):
         sql = "SELECT * FROM Channel"
         return await self.execute(sql, fetch=True)
+    async def get_chanel(self, channel):
+        sql = f"SELECT * FROM Channel WHERE chanelll=$1"
+        return await self.execute(sql, channel, fetch=True)
 
     async def add_chanell(self, chanelll, url):
         sql = "INSERT INTO Channel (chanelll, url) VALUES($1, $2) returning *"

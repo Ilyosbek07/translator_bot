@@ -7,18 +7,18 @@ from loader import dp, db
 from utils.misc import subscription
 
 
-@dp.message_handler(commands='ruuz')
+@dp.message_handler(commands='arabuz')
 async def bot_start(message: types.Message):
-    a = await db.update_users_from_lang(from_lang='ru', to_lang='uz', tg_id=message.from_user.id)
+    a = await db.update_users_from_lang(from_lang='ar', to_lang='uz', tg_id=message.from_user.id)
     await message.answer(
-        '"Rus - O`zbek" holatiga o`tildi. "O`zbek - Rus" holatiga o`tish uchun /uzru buyrug`ini bering.')
+        '"Arab - O`zbek" holatiga o`tildi. "O`zbek - Arab" holatiga o`tish uchun /uzarab buyrug`ini bering.')
 
 
-@dp.message_handler(commands='uzru')
+@dp.message_handler(commands='uzarab')
 async def bot_start(message: types.Message):
-    a = await db.update_users_from_lang(from_lang='uz', to_lang='ru', tg_id=message.from_user.id)
+    a = await db.update_users_from_lang(from_lang='uz', to_lang='ar', tg_id=message.from_user.id)
     await message.answer(
-        '"O`zbek - Rus" holatiga o`tildi. "Rus - O`zbek" holatiga o`tish uchun /ruuz buyrug`ini bering.')
+        '"O`zbek - Arab" holatiga o`tildi. "Arab - O`zbek" holatiga o`tish uchun /arabuz buyrug`ini bering.')
 
 
 @dp.message_handler(CommandStart())
@@ -43,9 +43,11 @@ async def bot_start(message: types.Message):
         status *= await subscription.check(user_id=message.from_user.id,
                                            channel=f'{channel}')
     if status:
-        await db.update_users_from_lang(from_lang='ru', to_lang='uz', tg_id=message.from_user.id)
-        await message.answer(
-            '"Rus - O`zbek" holatiga o`tildi. "O`zbek - Rus" holatiga o`tish uchun /uzru buyrug`ini bering.')
+        await message.answer('Text yuboring\n\n'
+                             'uz - arab holatida')
+        # await db.update_users_from_lang(from_lang='uz', to_lang='ar', tg_id=message.from_user.id)
+        # await message.answer(
+        #     '"O`zbek - Arab" holatiga o`tildi. "Arab - O`zbek" holatiga o`tish uchun /arabuz buyrug`ini bering.')
     else:
         button = types.InlineKeyboardMarkup(row_width=1, )
         counter = 0
@@ -77,7 +79,7 @@ async def checker(call: types.CallbackQuery, state: FSMContext):
                                            channel=f'{channel}')
     if status:
         await call.message.edit_text(
-            '"Rus - O`zbek" holatiga o`tildi. "O`zbek - Rus" holatiga o`tish uchun /uzru buyrug`ini bering.')
+            '"O`zbek - Arab" holatiga o`tildi. "Arab - O`zbek" holatiga o`tish uchun /arabuz buyrug`ini bering.')
     else:
         button = types.InlineKeyboardMarkup(row_width=1, )
         counter = 0
