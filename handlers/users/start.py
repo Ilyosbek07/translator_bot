@@ -11,14 +11,14 @@ from utils.misc import subscription
 async def bot_start(message: types.Message):
     a = await db.update_users_from_lang(from_lang='ar', to_lang='uz', tg_id=message.from_user.id)
     await message.answer(
-        '"Arab - O`zbek" holatiga o`tildi. "O`zbek - Arab" holatiga o`tish uchun /uzarab buyrug`ini bering.')
+        'Hozir "Arab - O`zbek" tarjima holatidasiz. "O`zbek - Arab" holatiga o`tish uchun /uzarab buyrug`ini bering.')
 
 
 @dp.message_handler(commands='uzarab')
 async def bot_start(message: types.Message):
     a = await db.update_users_from_lang(from_lang='uz', to_lang='ar', tg_id=message.from_user.id)
     await message.answer(
-        '"O`zbek - Arab" holatiga o`tildi. "Arab - O`zbek" holatiga o`tish uchun /arabuz buyrug`ini bering.')
+        'Hozir "O`zbek - Arab" tarjima holatidasiz. "Arab - O`zbek" holatiga o`tish uchun /arabuz buyrug`ini bering.')
 
 
 @dp.message_handler(CommandStart())
@@ -43,11 +43,8 @@ async def bot_start(message: types.Message):
         status *= await subscription.check(user_id=message.from_user.id,
                                            channel=f'{channel}')
     if status:
-        await message.answer('Text yuboring\n\n'
-                             'uz - arab holatida')
-        # await db.update_users_from_lang(from_lang='uz', to_lang='ar', tg_id=message.from_user.id)
-        # await message.answer(
-        #     '"O`zbek - Arab" holatiga o`tildi. "Arab - O`zbek" holatiga o`tish uchun /arabuz buyrug`ini bering.')
+        await message.answer('Hozir "O`zbek - Arab" holatidasiz. "Arab - O`zbek" holatiga o`tish uchun /arabuz buyrug`ini bering.')
+        await db.update_users_from_lang(from_lang='uz', to_lang='ar', tg_id=message.from_user.id)
     else:
         button = types.InlineKeyboardMarkup(row_width=1, )
         counter = 0
@@ -79,7 +76,7 @@ async def checker(call: types.CallbackQuery, state: FSMContext):
                                            channel=f'{channel}')
     if status:
         await call.message.edit_text(
-            '"O`zbek - Arab" holatiga o`tildi. "Arab - O`zbek" holatiga o`tish uchun /arabuz buyrug`ini bering.')
+            'Hozir "O`zbek - Arab" tarjima holatidasiz. "Arab - O`zbek" holatiga o`tish uchun /arabuz buyrug`ini bering.')
     else:
         button = types.InlineKeyboardMarkup(row_width=1, )
         counter = 0
@@ -92,22 +89,3 @@ async def checker(call: types.CallbackQuery, state: FSMContext):
                                      f'Кейин "Аъзо бўлдим" тугмасини босинг🚫',
                                      reply_markup=button,
                                      disable_web_page_preview=True)
-
-
-# @dp.message_handler(state=None)
-# async def bot_echo(message: types.Message):
-#     try:
-#         langs = await db.get_from(tg_id=message.from_user.id)
-#         from_lang = ''
-#         to_lang = ''
-#         for i in langs:
-#             from_lang += f"{i[0]}"
-#             to_lang += f"{i[1]}"
-#
-#         translator = Translator(from_lang=f'{from_lang}', to_lang=f"{to_lang}")
-#         text = message.text
-#         a = translator.translate(f"{text}")
-#         await message.answer(text=a, disable_notification=True)
-#     except:
-#         await message.answer('Kechirasiz faqat 500 tagacha bo`lgan so`zlarni qabul qilamiz\n\n'
-#                              'Iltomos 500 tadan ortig`ini alohida kiriting')
