@@ -7,18 +7,18 @@ from loader import dp, db
 from utils.misc import subscription
 
 
-@dp.message_handler(commands='arabuz')
+@dp.message_handler(commands='ruuz')
 async def bot_start(message: types.Message):
-    a = await db.update_users_from_lang(from_lang='ar', to_lang='uz', tg_id=message.from_user.id)
+    a = await db.update_users_from_lang(from_lang='ru', to_lang='uz', tg_id=message.from_user.id)
     await message.answer(
-        'Hozir "Arab - O`zbek" tarjima holatidasiz. "O`zbek - Arab" holatiga o`tish uchun /uzarab buyrug`ini bering.')
+        'Hozir "Rus - O`zbek" tarjima holatidasiz. "O`zbek - Rus" holatiga o`tish uchun /uzru buyrug`ini tering.')
 
 
-@dp.message_handler(commands='uzarab')
+@dp.message_handler(commands='uzru')
 async def bot_start(message: types.Message):
     a = await db.update_users_from_lang(from_lang='uz', to_lang='ar', tg_id=message.from_user.id)
     await message.answer(
-        'Hozir "O`zbek - Arab" tarjima holatidasiz. "Arab - O`zbek" holatiga o`tish uchun /arabuz buyrug`ini bering.')
+        'Hozir "O`zbek - Rus" tarjima holatidasiz. "Rus - O`zbek" holatiga o`tish uchun /ruuz buyrug`ini bering.')
 
 
 @dp.message_handler(CommandStart())
@@ -43,8 +43,8 @@ async def bot_start(message: types.Message):
         status *= await subscription.check(user_id=message.from_user.id,
                                            channel=f'{channel}')
     if status:
-        await message.answer('Hozir "O`zbek - Arab" holatidasiz. "Arab - O`zbek" holatiga o`tish uchun /arabuz buyrug`ini bering.')
-        await db.update_users_from_lang(from_lang='uz', to_lang='ar', tg_id=message.from_user.id)
+        await message.answer('Hozir "O`zbek - Rus" holatidasiz. "Rus - O`zbek" holatiga o`tish uchun /ruuz buyrug`ini bering.')
+        await db.update_users_from_lang(from_lang='uz', to_lang='ru', tg_id=message.from_user.id)
     else:
         button = types.InlineKeyboardMarkup(row_width=1, )
         counter = 0
@@ -53,7 +53,7 @@ async def bot_start(message: types.Message):
             button.add(types.InlineKeyboardButton(f"{counter}-канал", url=f'https://t.me/{i}'))
         button.add(types.InlineKeyboardButton(text="Tekshirish", callback_data="check_subs"))
         await message.answer(f"👋 Assalomu alaykum {message.from_user.first_name}\n\n"
-                             f"Botdan foydalanish uchun @cchannel kanaliga obuna bo'lishingiz kerak. Obuna bo'lgach pastdagi Tekshirish tugmasini bosing!",
+                             f"Botdan foydalanish uchun kanalga obuna bo'lishingiz kerak. Obuna bo'lgach pastdagi Tekshirish tugmasini bosing!",
                              reply_markup=button,
                              disable_web_page_preview=True)
 
@@ -76,7 +76,7 @@ async def checker(call: types.CallbackQuery, state: FSMContext):
                                            channel=f'{channel}')
     if status:
         await call.message.edit_text(
-            'Hozir "O`zbek - Arab" tarjima holatidasiz. "Arab - O`zbek" holatiga o`tish uchun /arabuz buyrug`ini bering.')
+            'Hozir "O`zbek - Rus" tarjima holatidasiz. "Rus - O`zbek" holatiga o`tish uchun /ruuz buyrug`ini bering.')
     else:
         button = types.InlineKeyboardMarkup(row_width=1, )
         counter = 0
