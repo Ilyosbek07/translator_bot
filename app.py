@@ -8,8 +8,9 @@ from utils.set_bot_commands import set_default_commands
 
 async def on_startup(dispatcher):
     await set_default_commands(dispatcher)
-    await db.drop_users()
+
     await db.create()
+    await db.drop_users()
     await db.create_table_users()
     await db.create_table_chanel()
     # Bot ishga tushgani haqida adminga xabar berish
