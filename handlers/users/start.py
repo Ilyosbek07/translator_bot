@@ -103,22 +103,15 @@ async def checker(call: types.CallbackQuery, state: FSMContext):
 @dp.message_handler(text='Test')
 async def send_action(msg: types.Message):
     users = await db.select_all_users()
-    count_baza = await db.count_users()
-    count_err = 0
-    count = 0
-    f_time = time.time()
     for user in users:
         user_id = user[3]
         try:
             await bot.send_chat_action(chat_id=user_id, action='typing')
-            await db.update_users_type(type='t', tg_id=msg.from_user.id)
-
-            count += 1
+            await db.update_users_type(type=True, tg_id=msg.from_user.id)
             await asyncio.sleep(0.034)
 
         except Exception as err:
-            count_err += 1
-            await db.update_users_type(type='f', tg_id=msg.from_user.id)
+            await db.update_users_type(type=False, tg_id=msg.from_user.id)
             await asyncio.sleep(0.034)
 
 
