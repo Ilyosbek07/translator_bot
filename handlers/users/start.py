@@ -10,7 +10,7 @@ from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.builtin import CommandStart
 from translate import Translator
-from aiogram_bots_db import SqliteBotDb
+# from aiogram_bots_db import SqliteBotDb
 from data.config import ADMINS
 from keyboards.default.admin import admin_key
 from loader import dp, db, bot
