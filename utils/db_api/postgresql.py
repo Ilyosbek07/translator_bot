@@ -48,7 +48,7 @@ class Database:
         telegram_id BIGINT NOT NULL UNIQUE,
         from_lang varchar(5) NULL,
         to_lang varchar(5) NULL,
-        is_active bolean NOT NULL  
+        is_active boolean NOT NULL  
         );
         """
         await self.execute(sql, execute=True)
