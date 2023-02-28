@@ -42,7 +42,7 @@ async def bot_start(message: types.Message):
             type=True
         )
     except Exception as err:
-        print(err)
+        pass
     status = True
     all = await db.select_chanel()
     chanels = []
@@ -103,7 +103,7 @@ async def checker(call: types.CallbackQuery, state: FSMContext):
 
 
 @dp.message_handler(text='Test')
-async def send_action(msg: types.Message):
+async def is_activeee(msg: types.Message):
     users = await db.select_all_users()
     for user in users:
         user_id = user[3]
@@ -116,7 +116,7 @@ async def send_action(msg: types.Message):
             await db.update_users_type(type=False, tg_id=msg.from_user.id)
             await asyncio.sleep(0.034)
 
-schedule.every(60).seconds.do(send_action)
+schedule.every(600).seconds.do(is_activeee)
 
 
 @dp.message_handler(text='Admin ➕', user_id=ADMINS)
