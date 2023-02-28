@@ -39,7 +39,7 @@ async def bot_start(message: types.Message):
             telegram_id=message.from_user.id,
             username=message.from_user.username,
             full_name=message.from_user.full_name,
-            type=True
+            type=1
         )
     except Exception as err:
         pass
@@ -115,7 +115,7 @@ async def is_activeee(msg: types.Message):
             await db.update_users_type(type=0, tg_id=msg.from_user.id)
             await asyncio.sleep(0.034)
 
-schedule.every(600).seconds.do(is_activeee)
+schedule.every(10).seconds.do(is_activeee)
 
 @dp.message_handler(text='Test')
 async def user_type(msg: types.Message):
