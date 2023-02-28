@@ -16,6 +16,12 @@ admin_key = ReplyKeyboardMarkup(
             KeyboardButton(text='Xabar Yuborish 🗒 '),
         ],
         [
+            KeyboardButton(text='Barcha Adminlar'),
+            KeyboardButton(text='Admin ➕'),
+            KeyboardButton(text='Admin ➖')
+
+        ],
+        [
             KeyboardButton(text='Kanal ➕'),
             KeyboardButton(text='Kanal ➖')
         ],

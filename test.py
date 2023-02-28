@@ -1,8 +1,4 @@
-from translate import Translator
+import time
 
-translator= Translator(from_lang='uz', to_lang='ar')
-
-# a = translator.translate('1 декабря прошлого года адвокаты иностранные и грузинские')
-a = translator.translate('O‘tgan yilning 1 dekabrida advokatlar chet ellik va gruziyalik')
-
-print(a)
+f_time = time.struct_time.tm_sec
+print(f_time)

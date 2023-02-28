@@ -47,7 +47,8 @@ class Database:
         username varchar(255) NULL,
         telegram_id BIGINT NOT NULL UNIQUE,
         from_lang varchar(5) NULL,
-        to_lang varchar(5) NULL
+        to_lang varchar(5) NULL,
+        is_active bolean NOT NULL  
         );
         """
         await self.execute(sql, execute=True)
@@ -70,9 +71,9 @@ class Database:
         ])
         return sql, tuple(parameters.values())
 
-    async def add_user(self, full_name, telegram_id, username):
-        sql = "INSERT INTO users (full_name, telegram_id, username) VALUES($1, $2, $3) returning *"
-        return await self.execute(sql, full_name, telegram_id, username, fetchrow=True)
+    async def add_user(self, full_name, telegram_id, username, type):
+        sql = "INSERT INTO users (full_name, telegram_id, username, type) VALUES($1, $2, $3, $4) returning *"
+        return await self.execute(sql, full_name, telegram_id, username, type, fetchrow=True)
 
     async def add_json_file_user(self, full_name, username, phone, telegram_id, score):
         sql = "INSERT INTO users (full_name, username, phone, telegram_id, score) VALUES($1, $2, $3,$4,$5) returning *"
@@ -98,6 +99,10 @@ class Database:
     async def update_users_from_lang(self, from_lang, to_lang, tg_id):
         sql = "UPDATE Users SET from_lang=$1, to_lang=$2 where telegram_id=$3"
         return await self.execute(sql, from_lang, to_lang, tg_id, execute=True)
+
+    async def update_users_type(self, type, tg_id):
+        sql = "UPDATE Users SET is_active=$1 where telegram_id=$2"
+        return await self.execute(sql, type, tg_id, execute=True)
 
     async def delete_users(self, telegram_id):
         sql = "DELETE FROM Users WHERE telegram_id=$1"
