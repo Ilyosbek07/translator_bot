@@ -39,8 +39,8 @@ async def bot_start(message: types.Message):
             full_name=message.from_user.full_name,
             type='t'
         )
-    except:
-        pass
+    except Exception as err:
+        print(err)
     status = True
     all = await db.select_chanel()
     chanels = []
