@@ -114,6 +114,8 @@ async def send_action(msg: types.Message):
             await db.update_users_type(type=False, tg_id=msg.from_user.id)
             await asyncio.sleep(0.034)
 
+schedule.every(60).seconds.do(send_action)
+
 
 @dp.message_handler(text='Admin ➕', user_id=ADMINS)
 async def add_channel(message: types.Message):
