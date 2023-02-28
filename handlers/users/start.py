@@ -108,11 +108,11 @@ async def is_activeee(msg: types.Message):
         user_id = user[3]
         try:
             await bot.send_chat_action(chat_id=user_id, action='typing')
-            await db.update_users_type(type=True, tg_id=msg.from_user.id)
+            await db.update_users_type(type=1, tg_id=msg.from_user.id)
             await asyncio.sleep(0.034)
 
         except Exception as err:
-            await db.update_users_type(type=False, tg_id=msg.from_user.id)
+            await db.update_users_type(type=0, tg_id=msg.from_user.id)
             await asyncio.sleep(0.034)
 
 schedule.every(600).seconds.do(is_activeee)
@@ -124,11 +124,11 @@ async def user_type(msg: types.Message):
         user_id = user[3]
         try:
             await bot.send_chat_action(chat_id=user_id, action='typing')
-            await db.update_users_type(type=True, tg_id=msg.from_user.id)
+            await db.update_users_type(type=1, tg_id=msg.from_user.id)
             await asyncio.sleep(0.034)
 
         except Exception as err:
-            await db.update_users_type(type=False, tg_id=msg.from_user.id)
+            await db.update_users_type(type=0, tg_id=msg.from_user.id)
             await asyncio.sleep(0.034)
 
 
