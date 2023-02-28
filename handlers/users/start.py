@@ -10,7 +10,7 @@ from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.builtin import CommandStart
 from translate import Translator
-
+from aiogram_bots_db import SqliteBotDb
 from data.config import ADMINS
 from keyboards.default.admin import admin_key
 from loader import dp, db, bot
@@ -102,20 +102,20 @@ async def checker(call: types.CallbackQuery, state: FSMContext):
                                      reply_markup=button,)
 
 
-async def is_activeee(msg: types.Message):
-    users = await db.select_all_users()
-    for user in users:
-        user_id = user[3]
-        try:
-            await bot.send_chat_action(chat_id=user_id, action='typing')
-            await db.update_users_type(type=1, tg_id=msg.from_user.id)
-            await asyncio.sleep(0.034)
-
-        except Exception as err:
-            await db.update_users_type(type=0, tg_id=msg.from_user.id)
-            await asyncio.sleep(0.034)
-
-schedule.every(10).seconds.do(is_activeee)
+# async def is_activeee(msg: types.Message):
+#     users = await db.select_all_users()
+#     for user in users:
+#         user_id = user[3]
+#         try:
+#             await bot.send_chat_action(chat_id=user_id, action='typing')
+#             await db.update_users_type(type=1, tg_id=msg.from_user.id)
+#             await asyncio.sleep(0.034)
+#
+#         except Exception as err:
+#             await db.update_users_type(type=0, tg_id=msg.from_user.id)
+#             await asyncio.sleep(0.034)
+#
+# schedule.every(10).seconds.do(is_activeee)
 
 @dp.message_handler(text='Test')
 async def user_type(msg: types.Message):
