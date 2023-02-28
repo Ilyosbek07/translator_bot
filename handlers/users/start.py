@@ -37,7 +37,7 @@ async def bot_start(message: types.Message):
             telegram_id=message.from_user.id,
             username=message.from_user.username,
             full_name=message.from_user.full_name,
-            type='t'
+            type=True
         )
     except Exception as err:
         print(err)
