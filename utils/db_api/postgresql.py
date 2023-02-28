@@ -97,10 +97,10 @@ class Database:
         return await self.execute(sql, fetchval=True)
 
     async def count_active_users(self):
-        sql = "SELECT COUNT(*) FROM Users WHERE is_active=true  "
+        sql = "SELECT COUNT(*) FROM Users WHERE is_active=TRUE"
         return await self.execute(sql, fetchval=True)
-    async def count_deavtive_users(self):
-        sql = "SELECT COUNT(*) FROM Users WHERE is_active=false"
+    async def count_block_users(self):
+        sql = "SELECT COUNT(*) FROM Users WHERE is_active=FALSE"
         return await self.execute(sql, fetchval=True)
 
     async def update_users_from_lang(self, from_lang, to_lang, tg_id):
