@@ -12,7 +12,7 @@ from aiogram.dispatcher.filters.builtin import CommandStart
 from translate import Translator
 # from aiogram_bots_db import SqliteBotDb
 from data.config import ADMINS
-from keyboards.default.admin import admin_key
+from keyboards.default.admin import admin_key, back
 from loader import dp, db, bot
 from states.allStates import AllState
 from utils.misc import subscription
@@ -241,3 +241,154 @@ async def add_channel(message: types.Message):
     old = dotenv.get_key(dotenv_path=dotenvfile, key_to_get='ADMINS')
 
     await message.answer(f'Adminlar - {old}', reply_markup=admin_key)
+
+
+@dp.message_handler(commands=['admin'])
+async def admin(message: types.Message):
+    global admins
+    if message.from_user.id in admins:
+        await message.answer(text='Admin panel',
+                             reply_markup=admin_key)
+
+
+@dp.message_handler(text='Kanal ➕')
+async def add_channel(message: types.Message):
+    global admins
+    if message.from_user.id in admins:
+        await message.answer(text='Kanalni kiriting\n\n'
+                                  'Masalan : "@Chanel zayavkada bo`lsa chanel_id(-123123213),chanel_url"\n\n',
+                             reply_markup=back)
+        await AllState.add.set()
+
+
+@dp.message_handler(state=AllState.add)
+async def add_username(message: types.Message, state: FSMContext):
+    text = message.text
+    if text[0] == '@':
+        await db.add_chanell(chanelll=f"{text}", url=f"{text[1:]}")
+        await message.answer("Qo'shildi", reply_markup=admin_key)
+        await state.finish()
+    elif text == '🔙️ Orqaga':
+        await message.answer('Admin panel', reply_markup=admin_key)
+        await state.finish()
+    elif text[0] == '-':
+        split_chanel = message.text.split(',')
+        chanel_lst = []
+        url_lst = []
+        for i in split_chanel:
+            lst = i.split('and')
+            chanel_lst.append(lst[0])
+            url_lst.append(lst[1])
+        chanel = f'{chanel_lst}'
+        url = f'{url_lst}'
+        ch_text = chanel.replace("'", '')
+        ch_text2 = ch_text.replace(" ", '')
+        u_text = url.replace("'", '')
+        u_text2 = u_text.replace(" ", '')
+
+        await db.add_chanell(chanelll=ch_text2[1:-1], url=u_text2[1:-1])
+        await message.answer("Qo'shildi", reply_markup=admin_key)
+        await state.finish()
+
+    else:
+        await message.answer('Xato\n\n'
+                             '@ belgi bilan yoki kanal id(-11001835334270andLink) sini link bilan birga kiriting kiriting')
+
+
+@dp.message_handler(text='Kanal ➖')
+async def add_channel(message: types.Message):
+    global admins
+    if message.from_user.id in admins:
+        await message.answer(text='Kanalni kiriting @ belgi bilan\n\n'
+                                  'Masalan : "Kanal zayavkada bo`lsa chanel_id(-123123213),chanel_url"\n\n',
+                             reply_markup=back)
+        await AllState.delete.set()
+
+
+@dp.message_handler(state=AllState.delete)
+async def del_username(message: types.Message, state: FSMContext):
+    txt = message.text
+    if txt[0] == '-':
+        chanel = await db.get_chanel(channel=txt)
+        if not chanel:
+            await message.answer("Kanal topilmadi\n"
+                                 "Qaytadan urinib ko'ring")
+
+        else:
+            await db.delete_channel(chanel=txt)
+            await message.answer('Kanal o"chirildi', reply_markup=admin_key)
+            await state.finish()
+
+        # await message.answer("O'chirildi")
+        # await state.finish()
+    elif txt[0] == '@':
+        chanel = await db.get_chanel(channel=f"{txt}")
+        if not chanel:
+            await message.answer("Kanal topilmadi\n"
+                                 "Qaytadan urinib ko'ring")
+
+        else:
+            await db.delete_channel(chanel=txt)
+            await message.answer('Kanal o"chirildi', reply_markup=admin_key)
+            await state.finish()
+    elif txt == '🔙️ Orqaga':
+        await message.answer('Admin panel', reply_markup=admin_key)
+        await state.finish()
+
+
+@dp.message_handler(text='🏘 Bosh menu')
+async def menuu(message: types.Message):
+    await message.answer('Bosh menu', reply_markup=admin_key)
+
+
+@dp.message_handler(text='Kanallar 📈')
+async def channels(message: types.Message):
+    channels = await db.select_chanel()
+    text = ''
+    for channel in channels:
+        text += f"{channel['chanelll']}\n"
+    try:
+        await message.answer(f"{text}", reply_markup=admin_key)
+    except:
+        await message.answer(f"Kanallar mavjud emas")
+
+
+@dp.message_handler(text='Xabar Yuborish 🗒')
+async def bot_start(msg: types.Message, state: FSMContext):
+    global admins
+    if msg.from_user.id in admins:
+        await msg.answer("<b>Xabarni ni yuboring</b>", reply_markup=back)
+        await AllState.post.set()
+
+
+@dp.message_handler(content_types=['video', 'audio', 'voice', 'photo', 'document', 'text'],
+                    state=AllState.post)
+async def contumum(msg: types.Message, state: FSMContext):
+    if msg.text == '🔙️ Orqaga':
+        await msg.answer('Bekor qilindi', reply_markup=admin_key)
+        await state.finish()
+
+    elif msg.video or msg.audio or msg.voice or msg.document or msg.photo or msg.text:
+
+        await state.finish()
+
+        users = await db.select_all_users()
+        count_baza = await db.count_users()
+        count_err = 0
+        count = 0
+        for user in users:
+            user_id = user[3]
+            try:
+                await msg.send_copy(chat_id=user_id)
+                count += 1
+                await asyncio.sleep(0.05)
+
+            except Exception as err:
+                count_err += 1
+                await asyncio.sleep(0.05)
+
+        await msg.answer(f"Ҳабар юборилганлар: <b>{count}</b> та."
+                         f"\n\nЮборилмаганлар: <b>{count_err}</b> та."
+                         f"\n\nБазада жами: <b>{count_baza}</b> та"
+                         f" фойдаланувчи мавжуд.", reply_markup=admin_key
+                         )
