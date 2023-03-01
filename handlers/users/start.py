@@ -194,6 +194,10 @@ async def env_change(message: types.Message, state: FSMContext):
         await message.answer('Faqat son qabul qilinadi\n\n'
                              'Qaytadan kiriting')
 
+@dp.message_handler(text='add')
+async def add_channel(message: types.Message):
+    global admins
+    await message.answer(f'{admins}')
 
 @dp.message_handler(text='Admin ➖')
 async def add_channel(message: types.Message):
@@ -201,7 +205,6 @@ async def add_channel(message: types.Message):
     if message.from_user.id in admins:
         await message.answer('Id ni kiriting')
         await AllState.env_remove.set()
-
 
 @dp.message_handler(state=AllState.env_remove)
 async def env_change(message: types.Message, state: FSMContext):
@@ -221,7 +224,7 @@ async def env_change(message: types.Message, state: FSMContext):
                 key,
                 os.environ[key]
             )
-            admins.remove(message.text)
+            admins.remove(test)
             new = dotenv.get_key(dotenv_path=dotenvfile, key_to_get='ADMINS')
             await message.answer(f'O"chirildi\n\n'
                                  f'Hozirgi adminlar {new}', reply_markup=admin_key)
@@ -229,7 +232,8 @@ async def env_change(message: types.Message, state: FSMContext):
         else:
             await message.answer('Bunday admin mavjud emas\n\n'
                                  'Faqat admin id sini qabul qilamiz', reply_markup=admin_key)
-    except ValueError:
+    except Exception as err:
+        await message.answer(f'{err}')
         await message.answer('Faqat son qabul qilinadi\n\n'
                              'Qaytadan kiriting')
 
