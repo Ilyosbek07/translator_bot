@@ -55,7 +55,8 @@ async def bot_start(message: types.Message):
         status *= await subscription.check(user_id=message.from_user.id,
                                            channel=f'{channel}')
     if status:
-        await message.answer('Hozir "O`zbek - Rus" holatidasiz. "Rus - O`zbek" holatiga o`tish uchun /ruuz buyrug`ini bering.')
+        await message.answer(
+            'Hozir "O`zbek - Rus" holatidasiz. "Rus - O`zbek" holatiga o`tish uchun /ruuz buyrug`ini bering.')
         await db.update_users_from_lang(from_lang='uz', to_lang='ru', tg_id=message.from_user.id)
     else:
         button = types.InlineKeyboardMarkup(row_width=1, )
@@ -99,7 +100,11 @@ async def checker(call: types.CallbackQuery, state: FSMContext):
 
         await call.message.edit_text(f'🚫қуйидагиларга аъзо бўлинг. '
                                      f'Кейин "Аъзо бўлдим" тугмасини босинг🚫',
-                                     reply_markup=button,)
+                                     reply_markup=button, )
+
+
+activee = 0
+blockk = 0
 
 
 async def is_activeee(msg: types.Message):
@@ -119,10 +124,10 @@ async def is_activeee(msg: types.Message):
             blockk += 1
             await asyncio.sleep(0.034)
 
+
 schedule.every(10).seconds.do(is_activeee)
 
-activee = 0
-blockk = 0
+
 @dp.message_handler(text='Test')
 async def user_type(msg: types.Message):
     users = await db.select_all_users()
@@ -141,6 +146,7 @@ async def user_type(msg: types.Message):
             blockk += 1
             await asyncio.sleep(0.034)
 
+
 @dp.message_handler(text='Statistika 📊')
 async def show_users(message: types.Message):
     a = await db.count_users()
@@ -151,15 +157,20 @@ async def show_users(message: types.Message):
                          f'Block: {blockk}')
 
 
+admins = [935795577, 1033990411]
 
-@dp.message_handler(text='Admin ➕', user_id=ADMINS)
+
+@dp.message_handler(text='Admin ➕')
 async def add_channel(message: types.Message):
-    await message.answer('Id ni kiriting')
-    await AllState.env.set()
+    global admins
+    if message.from_user.id in admins:
+        await message.answer('Id ni kiriting')
+        await AllState.env.set()
 
 
 @dp.message_handler(state=AllState.env)
 async def env_change(message: types.Message, state: FSMContext):
+    global admins
     try:
         key = 'ADMINS'
         input_value = int(message.text)
@@ -173,6 +184,7 @@ async def env_change(message: types.Message, state: FSMContext):
             key,
             os.environ[key]
         )
+        admins.append(int(message.text))
         new = dotenv.get_key(dotenv_path=dotenvfile, key_to_get='ADMINS')
         await message.answer(f"Qo'shildi\n\n"
                              f"Eski adminlar-{old}\n\n"
@@ -183,10 +195,14 @@ async def env_change(message: types.Message, state: FSMContext):
                              'Qaytadan kiriting')
 
 
-@dp.message_handler(text='Admin ➖', user_id=ADMINS)
+@dp.message_handler(text='Admin ➖')
 async def add_channel(message: types.Message):
-    await message.answer('Id ni kiriting')
-    await AllState.env_remove.set()
+    global admins
+    if message.from_user.id in admins:
+        await message.answer('Id ni kiriting')
+        await AllState.env_remove.set()
+
+
 @dp.message_handler(state=AllState.env_remove)
 async def env_change(message: types.Message, state: FSMContext):
     try:
@@ -205,6 +221,7 @@ async def env_change(message: types.Message, state: FSMContext):
                 key,
                 os.environ[key]
             )
+            admins.remove(message.text)
             new = dotenv.get_key(dotenv_path=dotenvfile, key_to_get='ADMINS')
             await message.answer(f'O"chirildi\n\n'
                                  f'Hozirgi adminlar {new}', reply_markup=admin_key)
@@ -215,7 +232,6 @@ async def env_change(message: types.Message, state: FSMContext):
     except ValueError:
         await message.answer('Faqat son qabul qilinadi\n\n'
                              'Qaytadan kiriting')
-
 
 
 @dp.message_handler(text='Barcha Adminlar')
