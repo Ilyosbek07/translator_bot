@@ -95,15 +95,15 @@ async def del_username(message: types.Message, state: FSMContext):
         await state.finish()
 
 
-@dp.message_handler(text='Statistika 📊')
-async def show_users(message: types.Message):
-    a = await db.count_users()
-    active = await db.count_active_users()
-    block = await db.count_block_users()
-    await message.answer(f'<b>🔷 Jami obunachilar: {a} tа</b>\n\n'
-                         f'Active: {active}\n'
-                         f'Block: {block}')
-
+# @dp.message_handler(text='Statistika 📊')
+# async def show_users(message: types.Message):
+#     a = await db.count_users()
+#     active = await db.count_active_users()
+#     block = await db.count_block_users()
+#     await message.answer(f'<b>🔷 Jami obunachilar: {a} tа</b>\n\n'
+#                          f'Active: {active}\n'
+#                          f'Block: {block}')
+#
 
 @dp.message_handler(text='🏘 Bosh menu')
 async def menuu(message: types.Message):
