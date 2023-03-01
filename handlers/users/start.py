@@ -121,7 +121,8 @@ async def is_activeee(msg: types.Message):
 
 schedule.every(10).seconds.do(is_activeee)
 
-
+activee = 0
+blockk = 0
 @dp.message_handler(text='Test')
 async def user_type(msg: types.Message):
     users = await db.select_all_users()
