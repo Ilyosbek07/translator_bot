@@ -27,7 +27,7 @@ async def bot_start(message: types.Message):
 
 @dp.message_handler(commands='uzru')
 async def bot_start(message: types.Message):
-    a = await db.update_users_from_lang(from_lang='uz', to_lang='ar', tg_id=message.from_user.id)
+    a = await db.update_users_from_lang(from_lang='uz', to_lang='ru', tg_id=message.from_user.id)
     await message.answer(
         'Hozir "O`zbek - Rus" tarjima holatidasiz. "Rus - O`zbek" holatiga o`tish uchun /ruuz buyrug`ini bering.')
 
