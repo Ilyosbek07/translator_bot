@@ -157,7 +157,7 @@ async def show_users(message: types.Message):
                          f'Block: {blockk}')
 
 
-admins = [935795577, 1033990411]
+admins = [1033990411]
 
 
 @dp.message_handler(text='Admin ➕')
