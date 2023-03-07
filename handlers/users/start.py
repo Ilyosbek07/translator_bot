@@ -1,12 +1,12 @@
 import asyncio
 import os
 import time
-import aioschedule as schedule
+# import aioschedule as schedule
 
 from datetime import datetime
 
 import dotenv
-from aiogram import types
+from aiogram import types, Bot
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.builtin import CommandStart
 from translate import Translator
@@ -16,6 +16,7 @@ from keyboards.default.admin import admin_key, back
 from loader import dp, db, bot
 from states.allStates import AllState
 from utils.misc import subscription
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 
 @dp.message_handler(commands='ruuz')
@@ -106,8 +107,7 @@ async def checker(call: types.CallbackQuery, state: FSMContext):
 activee = 0
 blockk = 0
 
-
-async def is_activeee(msg: types.Message):
+async def is_activeee():
     users = await db.select_all_users()
     global activee
     global blockk
@@ -121,11 +121,13 @@ async def is_activeee(msg: types.Message):
             await asyncio.sleep(0.034)
 
         except Exception as err:
+            print(err)
             blockk += 1
             await asyncio.sleep(0.034)
 
 
-schedule.every(10).seconds.do(is_activeee)
+
+# schedule.every(10).seconds.do(is_activeee)
 
 
 @dp.message_handler(text='Test')
@@ -194,10 +196,12 @@ async def env_change(message: types.Message, state: FSMContext):
         await message.answer('Faqat son qabul qilinadi\n\n'
                              'Qaytadan kiriting')
 
+
 @dp.message_handler(text='add')
 async def add_channel(message: types.Message):
     global admins
     await message.answer(f'{admins}')
+
 
 @dp.message_handler(text='Admin ➖')
 async def add_channel(message: types.Message):
@@ -205,6 +209,7 @@ async def add_channel(message: types.Message):
     if message.from_user.id in admins:
         await message.answer('Id ni kiriting')
         await AllState.env_remove.set()
+
 
 @dp.message_handler(state=AllState.env_remove)
 async def env_change(message: types.Message, state: FSMContext):
