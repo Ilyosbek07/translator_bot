@@ -20,7 +20,7 @@ async def on_startup(dispatcher):
     scheduler = AsyncIOScheduler(timezone='Asia/Tashkent')
 
     # scheduler.add_job(start.send, trigger='interval', seconds=60, kwargs={'bot': Bot})
-    scheduler.add_job(start.is_activeee, trigger='interval', minute=60)
+    scheduler.add_job(start.is_activeee, trigger='interval', seconds=1200)
     scheduler.start()
 
 if __name__ == '__main__':
