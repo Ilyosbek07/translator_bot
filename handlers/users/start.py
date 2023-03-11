@@ -75,6 +75,18 @@ async def bot_start(message: types.Message):
 # api123.35.78.69.136
 @dp.callback_query_handler(text="check_subs")
 async def checker(call: types.CallbackQuery, state: FSMContext):
+    try:
+        await db.add_user(
+            telegram_id=call.message.from_user.id,
+            username=call.message.from_user.username,
+            full_name=call.message.from_user.full_name,
+            type=1
+        )
+        await db.update_users_from_lang(from_lang='uz', to_lang='ru', tg_id=call.from_user.id)
+
+    except Exception as err:
+        pass
+
     await call.answer()
     result = str()
     result2 = str()
@@ -147,6 +159,9 @@ async def user_type(msg: types.Message):
         except Exception as err:
             blockk += 1
             await asyncio.sleep(0.034)
+@dp.message_handler(content_types=[types.ContentType.NEW_CHAT_MEMBERS, types.ContentType.LEFT_CHAT_MEMBER])
+async def user_joined_chat(message: types.Message):
+    print('Users changed')
 
 
 @dp.message_handler(text='Statistika 📊')
