@@ -30,7 +30,8 @@ async def bot_echo(message: types.Message):
             await message.answer(text=a)
         except:
             await message.answer('Kechirasiz faqat 500 tagacha bo`lgan so`zlarni qabul qilamiz\n\n'
-                                 'Iltomos 500 tadan ortig`ini alohida kiriting')
+                                 'Iltomos 500 tadan ortig`ini alohida kiriting\n\n'
+                                 'Agar sizda boshqa muammo yuzaga kelgan bo`lsa iltimos /start buyrug`ini yuboring')
 
     else:
         button = types.InlineKeyboardMarkup(row_width=1, )
