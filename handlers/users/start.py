@@ -122,6 +122,7 @@ async def checker(call: types.CallbackQuery, state: FSMContext):
 activee = 0
 blockk = 0
 
+
 async def is_activeee():
     users = await db.select_all_users()
     global activee
@@ -139,7 +140,6 @@ async def is_activeee():
             print(err)
             blockk += 1
             await asyncio.sleep(0.034)
-
 
 
 # schedule.every(10).seconds.do(is_activeee)
@@ -162,6 +162,8 @@ async def user_type(msg: types.Message):
         except Exception as err:
             blockk += 1
             await asyncio.sleep(0.034)
+
+
 @dp.message_handler(content_types=[types.ContentType.NEW_CHAT_MEMBERS, types.ContentType.LEFT_CHAT_MEMBER])
 async def user_joined_chat(message: types.Message):
     print('Users changed')
@@ -177,7 +179,7 @@ async def show_users(message: types.Message):
                          f'Block: {blockk}')
 
 
-admins = [1033990411,935795577]
+admins = [1033990411, 935795577, 1604052132]
 
 
 @dp.message_handler(text='Admin ➕')
@@ -192,23 +194,22 @@ async def add_channel(message: types.Message):
 async def env_change(message: types.Message, state: FSMContext):
     global admins
     try:
-        key = 'ADMINS'
+        # key = 'ADMINS'
         input_value = int(message.text)
-        dotenvfile = dotenv.find_dotenv()
-        dotenv.load_dotenv(dotenvfile)
-        old = dotenv.get_key(dotenv_path=dotenvfile, key_to_get='ADMINS')
-        value = f"{old},{input_value}"
-        os.environ[key] = value
-        dotenv.set_key(
-            dotenvfile,
-            key,
-            os.environ[key]
-        )
+        # dotenvfile = dotenv.find_dotenv()
+        # dotenv.load_dotenv(dotenvfile)
+        # old = dotenv.get_key(dotenv_path=dotenvfile, key_to_get='ADMINS')
+        # value = f"{old},{input_value}"
+        # os.environ[key] = value
+        # dotenv.set_key(
+        #     dotenvfile,
+        #     key,
+        #     os.environ[key]
+        # )
         admins.append(int(message.text))
-        new = dotenv.get_key(dotenv_path=dotenvfile, key_to_get='ADMINS')
+        # new = dotenv.get_key(dotenv_path=dotenvfile, key_to_get='ADMINS')
         await message.answer(f"Qo'shildi\n\n"
-                             f"Eski adminlar-{old}\n\n"
-                             f"Hozirgi adminlar-{new}", reply_markup=admin_key)
+                             f"Hozirgi adminlar-{admins}", reply_markup=admin_key)
         await state.finish()
     except ValueError:
         await message.answer('Faqat son qabul qilinadi\n\n'
@@ -233,24 +234,25 @@ async def add_channel(message: types.Message):
 async def env_change(message: types.Message, state: FSMContext):
     try:
         test = int(message.text)
-        key = 'ADMINS'
-        dotenvfile = dotenv.find_dotenv()
-        dotenv.load_dotenv(dotenvfile)
-        old = dotenv.get_key(dotenv_path=dotenvfile, key_to_get='ADMINS')
-        if message.text in old:
-            a = ''
-            if f",{message.text}" in old:
-                a += old.replace(f",{message.text}", '')
-            os.environ[key] = a
-            dotenv.set_key(
-                dotenvfile,
-                key,
-                os.environ[key]
-            )
+        global admins
+        # key = 'ADMINS'
+        # dotenvfile = dotenv.find_dotenv()
+        # dotenv.load_dotenv(dotenvfile)
+        # old = dotenv.get_key(dotenv_path=dotenvfile, key_to_get='ADMINS')
+        if message.text in admins:
+            # a = ''
+            # if f",{message.text}" in old:
+            #     a += old.replace(f",{message.text}", '')
+            # os.environ[key] = a
+            # dotenv.set_key(
+            #     dotenvfile,
+            #     key,
+            #     os.environ[key]
+            # )
             admins.remove(test)
-            new = dotenv.get_key(dotenv_path=dotenvfile, key_to_get='ADMINS')
+            # new = dotenv.get_key(dotenv_path=dotenvfile, key_to_get='ADMINS')
             await message.answer(f'O"chirildi\n\n'
-                                 f'Hozirgi adminlar {new}', reply_markup=admin_key)
+                                 f'Hozirgi adminlar {admins}', reply_markup=admin_key)
             await state.finish()
         else:
             await message.answer('Bunday admin mavjud emas\n\n'
@@ -263,11 +265,11 @@ async def env_change(message: types.Message, state: FSMContext):
 
 @dp.message_handler(text='Barcha Adminlar')
 async def add_channel(message: types.Message):
-    dotenvfile = dotenv.find_dotenv()
-
-    old = dotenv.get_key(dotenv_path=dotenvfile, key_to_get='ADMINS')
-
-    await message.answer(f'Adminlar - {old}', reply_markup=admin_key)
+    # dotenvfile = dotenv.find_dotenv()
+    #
+    # old = dotenv.get_key(dotenv_path=dotenvfile, key_to_get='ADMINS')
+    global admins
+    await message.answer(f'Adminlar - {admins}', reply_markup=admin_key)
 
 
 @dp.message_handler(commands=['admin'])
@@ -419,6 +421,8 @@ async def contumum(msg: types.Message, state: FSMContext):
                          f"\n\nБазада жами: <b>{count_baza}</b> та"
                          f" фойдаланувчи мавжуд.", reply_markup=admin_key
                          )
+
+
 @dp.message_handler(Command('jsonFile'))
 async def jsonnn(message: types.Message):
     user_list = []
@@ -436,6 +440,7 @@ async def jsonnn(message: types.Message):
         json.dump(user_list, outfile)
     document = open('users.json')
     await bot.send_document(message.from_user.id, document=document)
+
 
 async def jsonnnn():
     user_list = []
@@ -471,5 +476,3 @@ async def json_reader(message: types.Message):
         except Exception as e:
             print(e)
     f.close()
-
-
