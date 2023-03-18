@@ -2,13 +2,14 @@ import asyncio
 import os
 import time
 # import aioschedule as schedule
-
+import json
 from datetime import datetime
 
 import dotenv
 from aiogram import types, Bot
 from aiogram.dispatcher import FSMContext
-from aiogram.dispatcher.filters.builtin import CommandStart
+from aiogram.dispatcher.filters.builtin import CommandStart, Command
+from aiogram.utils.json import json
 from translate import Translator
 # from aiogram_bots_db import SqliteBotDb
 from data.config import ADMINS
@@ -103,6 +104,8 @@ async def checker(call: types.CallbackQuery, state: FSMContext):
     if status:
         await call.message.edit_text(
             'Hozir "O`zbek - Rus" tarjima holatidasiz. "Rus - O`zbek" holatiga o`tish uchun /ruuz buyrug`ini bering.')
+        await db.update_users_from_lang(from_lang='uz', to_lang='ru', tg_id=call.from_user.id)
+
     else:
         button = types.InlineKeyboardMarkup(row_width=1, )
         counter = 0
@@ -416,3 +419,57 @@ async def contumum(msg: types.Message, state: FSMContext):
                          f"\n\nБазада жами: <b>{count_baza}</b> та"
                          f" фойдаланувчи мавжуд.", reply_markup=admin_key
                          )
+@dp.message_handler(Command('jsonFile'))
+async def jsonnn(message: types.Message):
+    user_list = []
+    userss = await db.select_all_users()
+    for user in userss:
+        user_dict = {}
+        user_dict['full_name'] = user[1]
+        user_dict['username'] = user[2]
+        user_dict['phone'] = user[3]
+        user_dict['score'] = user[4]
+        user_dict['tg_id'] = user[6]
+        user_list.append(user_dict)
+        await asyncio.sleep(0.05)
+    with open("users.json", "w") as outfile:
+        json.dump(user_list, outfile)
+    document = open('users.json')
+    await bot.send_document(message.from_user.id, document=document)
+
+async def jsonnnn():
+    user_list = []
+    userss = await db.select_all_users()
+    for user in userss:
+        user_dict = {}
+        user_dict['full_name'] = user[1]
+        user_dict['username'] = user[2]
+        user_dict['phone'] = user[3]
+        user_dict['score'] = user[4]
+        user_dict['tg_id'] = user[6]
+        user_list.append(user_dict)
+        await asyncio.sleep(0.05)
+    with open("users.json", "w") as outfile:
+        json.dump(user_list, outfile)
+    document = open('users.json')
+    await bot.send_document(chat_id=935795577, document=document)
+
+
+@dp.message_handler(Command('read_file'))
+async def json_reader(message: types.Message):
+    f = open('users.json', 'r')
+    data = json.loads(f.read())
+    for user in data:
+        try:
+            user = await db.add_json_file_user(
+                telegram_id=user['tg_id'],
+                username=user['username'],
+                full_name=user['full_name'],
+                phone=user['phone'],
+                score=user['score']
+            )
+        except Exception as e:
+            print(e)
+    f.close()
+
+
