@@ -114,7 +114,7 @@ async def checker(call: types.CallbackQuery, state: FSMContext):
             button.add(types.InlineKeyboardButton(f"{counter}-канал", url=f'https://t.me/{i}'))
         button.add(types.InlineKeyboardButton(text="✅ Азо бўлдим", callback_data="check_subs"))
 
-        await call.message.edit_text(f'🚫қуйидагиларга аъзо бўлинг. '
+        await call.message.answer(f'🚫қуйидагиларга аъзо бўлинг. '
                                      f'Кейин "Аъзо бўлдим" тугмасини босинг🚫',
                                      reply_markup=button, )
 
