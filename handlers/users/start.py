@@ -239,7 +239,7 @@ async def env_change(message: types.Message, state: FSMContext):
         # dotenvfile = dotenv.find_dotenv()
         # dotenv.load_dotenv(dotenvfile)
         # old = dotenv.get_key(dotenv_path=dotenvfile, key_to_get='ADMINS')
-        if message.text in admins:
+        if test in admins:
             # a = ''
             # if f",{message.text}" in old:
             #     a += old.replace(f",{message.text}", '')
