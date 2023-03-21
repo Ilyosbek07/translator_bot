@@ -20,18 +20,18 @@ from utils.misc import subscription
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 
-@dp.message_handler(commands='ruuz')
+@dp.message_handler(commands='arabuz')
 async def bot_start(message: types.Message):
     a = await db.update_users_from_lang(from_lang='ru', to_lang='uz', tg_id=message.from_user.id)
     await message.answer(
-        'Hozir "Rus - O`zbek" tarjima holatidasiz. "O`zbek - Rus" holatiga o`tish uchun /uzru buyrug`ini tering.')
+        'Hozir "Arab - O`zbek" tarjima holatidasiz. "O`zbek - Arab" holatiga o`tish uchun /uzarab buyrug`ini tering.')
 
 
-@dp.message_handler(commands='uzru')
+@dp.message_handler(commands='uzarab')
 async def bot_start(message: types.Message):
     a = await db.update_users_from_lang(from_lang='uz', to_lang='ru', tg_id=message.from_user.id)
     await message.answer(
-        'Hozir "O`zbek - Rus" tarjima holatidasiz. "Rus - O`zbek" holatiga o`tish uchun /ruuz buyrug`ini bering.')
+        'Hozir "O`zbek - Arab" tarjima holatidasiz. "Arab - O`zbek" holatiga o`tish uchun /arabuz buyrug`ini bering.')
 
 
 @dp.message_handler(CommandStart())
@@ -58,8 +58,8 @@ async def bot_start(message: types.Message):
                                            channel=f'{channel}')
     if status:
         await message.answer(
-            'Hozir "O`zbek - Rus" holatidasiz. "Rus - O`zbek" holatiga o`tish uchun /ruuz buyrug`ini bering.')
-        await db.update_users_from_lang(from_lang='uz', to_lang='ru', tg_id=message.from_user.id)
+            'Hozir "O`zbek - Arab" holatidasiz. "Arab - O`zbek" holatiga o`tish uchun /arabuz buyrug`ini bering.')
+        await db.update_users_from_lang(from_lang='uz', to_lang='ar', tg_id=message.from_user.id)
     else:
         button = types.InlineKeyboardMarkup(row_width=1, )
         counter = 0
@@ -83,7 +83,7 @@ async def checker(call: types.CallbackQuery, state: FSMContext):
             full_name=call.message.from_user.full_name,
             type=1
         )
-        await db.update_users_from_lang(from_lang='uz', to_lang='ru', tg_id=call.from_user.id)
+        await db.update_users_from_lang(from_lang='uz', to_lang='ar', tg_id=call.from_user.id)
 
     except Exception as err:
         pass
@@ -103,8 +103,8 @@ async def checker(call: types.CallbackQuery, state: FSMContext):
                                            channel=f'{channel}')
     if status:
         await call.message.edit_text(
-            'Hozir "O`zbek - Rus" tarjima holatidasiz. "Rus - O`zbek" holatiga o`tish uchun /ruuz buyrug`ini bering.')
-        await db.update_users_from_lang(from_lang='uz', to_lang='ru', tg_id=call.from_user.id)
+            'Hozir "O`zbek - Arab" tarjima holatidasiz. "Arab - O`zbek" holatiga o`tish uchun /arabuz buyrug`ini bering.')
+        await db.update_users_from_lang(from_lang='uz', to_lang='ar', tg_id=call.from_user.id)
 
     else:
         button = types.InlineKeyboardMarkup(row_width=1, )
@@ -164,9 +164,6 @@ async def user_type(msg: types.Message):
             await asyncio.sleep(0.034)
 
 
-@dp.message_handler(content_types=[types.ContentType.NEW_CHAT_MEMBERS, types.ContentType.LEFT_CHAT_MEMBER])
-async def user_joined_chat(message: types.Message):
-    print('Users changed')
 
 
 @dp.message_handler(text='Statistika 📊')
@@ -179,7 +176,7 @@ async def show_users(message: types.Message):
                          f'Block: {blockk}')
 
 
-admins = [1033990411, 935795577, 1604052132]
+admins = [935795577]
 
 
 @dp.message_handler(text='Admin ➕')
