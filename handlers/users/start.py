@@ -22,14 +22,14 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 @dp.message_handler(commands='arabuz')
 async def bot_start(message: types.Message):
-    a = await db.update_users_from_lang(from_lang='ru', to_lang='uz', tg_id=message.from_user.id)
+    a = await db.update_users_from_lang(from_lang='ar', to_lang='uz', tg_id=message.from_user.id)
     await message.answer(
         'Hozir "Arab - O`zbek" tarjima holatidasiz. "O`zbek - Arab" holatiga o`tish uchun /uzarab buyrug`ini tering.')
 
 
 @dp.message_handler(commands='uzarab')
 async def bot_start(message: types.Message):
-    a = await db.update_users_from_lang(from_lang='uz', to_lang='ru', tg_id=message.from_user.id)
+    a = await db.update_users_from_lang(from_lang='uz', to_lang='ar', tg_id=message.from_user.id)
     await message.answer(
         'Hozir "O`zbek - Arab" tarjima holatidasiz. "Arab - O`zbek" holatiga o`tish uchun /arabuz buyrug`ini bering.')
 
