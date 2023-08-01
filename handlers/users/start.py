@@ -435,9 +435,7 @@ async def jsonnn(message: types.Message):
         user_dict = {}
         user_dict['full_name'] = user[1]
         user_dict['username'] = user[2]
-        user_dict['phone'] = user[3]
-        user_dict['score'] = user[4]
-        user_dict['tg_id'] = user[6]
+        user_dict['tg_id'] = user[3]
         user_list.append(user_dict)
         await asyncio.sleep(0.05)
     with open("users.json", "w") as outfile:
